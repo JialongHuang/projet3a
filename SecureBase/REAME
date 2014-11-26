@@ -1,0 +1,42 @@
+probleme rencontrer:
+	-penser a suprimer l'application quand on change le format de la bdd (format stocker dans le tel)
+	-on rentre donner/ cle on le stock dans la bdd on extrait la donner de la bdd on dechiffre
+	et on l'affiche dans la balise data
+
+
+Creation de fichier:
+    -dans le stockage interne car fichier accecible unisquement par l'aplication et si l'apli est desinstaller alors
+    le fichier aussi
+    -fichier normal ou cache
+    -nextInt chelou
+
+
+Creation Test:
+    //File Creation
+            _dir = getApplicationContext().getDir("Project",Context.MODE_PRIVATE);
+            _file = new File(_dir,"file1");
+
+            //write
+            if(_file != null){
+                try{
+                    _fout = openFileOutput("file1",Context.MODE_PRIVATE);
+                    _fout.write(testkey.getBytes());
+                    _fout.close();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            //read
+            if(_file != null){
+                try{
+                    _fin = openFileInput("file1");
+                    int c;
+                    String tmp="";
+                    while((c = _fin.read()) != -1){
+                        tmp = tmp + Character.toString((char)c);
+
+                    }
+                }catch(Exception e){
+
+                }
+            }

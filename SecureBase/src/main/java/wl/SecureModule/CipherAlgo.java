@@ -8,24 +8,17 @@ import java.math.BigInteger;
 /**
  * Created by huang and slavnic on 29/10/14.
  */
-public class CipherAlgo {
-    private static String _IV;
 
-    private static byte[] _IValea;
-    private static byte[] _bytePlainText;
-    private static byte[] _byteIV;
+public class CipherAlgo {
+
     private static String _algo;
     private static String _keyValue;
+    private static String _encoding ="UTF-8";
+    private static String _secretKeyMode = "AES";
 
     public CipherAlgo(){
         _algo = "AES/CBC/PKCS5Padding";
         _keyValue = "ENSICAENENSICAEN";
-        _IV ="1234567890000000";
-        // TODO gere la taille
-        _IValea = new byte[16];
-        _byteIV = new byte[16];
-        _bytePlainText = new byte [16];
-
     }
 
     /**
@@ -44,42 +37,43 @@ public class CipherAlgo {
     public CipherAlgo(String algo){
         _algo=algo;
         _keyValue = "ENSICAENMONETIQUE";
-        _IV ="informatique";
     }
 
 
-    public String encrypt(String plainText) throws Exception {
-        int j;
+    public byte[] encrypt(String plainText,byte[] IV) throws Exception {
         Cipher cipher = Cipher.getInstance(_algo);
-        SecretKeySpec key = new SecretKeySpec(_keyValue.getBytes("UTF-8"), "AES");
-
-        //IV made with by XOR static value and plain Text
-        _bytePlainText= plainText.getBytes("UTF-8");
-        _byteIV = _IV.getBytes("UTF-8");
-        for(j=0 ;j<16;j++) {
-            _IValea[j] = (byte) (0xff & ((int)_bytePlainText[j] ^ (int)_byteIV[j]));
-        }
-
-        cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(_IValea));
-        byte[] encVal=cipher.doFinal(plainText.getBytes("UTF-8"));
-        String s ="";
-        for(int i=0;i<encVal.length;i++){
-            s+=String.format("%8s", Integer.toBinaryString(encVal[i] & 0xFF)).replace(' ', '0');
-        }
-        return s;
+        SecretKeySpec key = new SecretKeySpec(_keyValue.getBytes(_encoding), _secretKeyMode);
+        cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV));
+        byte[] encVal=cipher.doFinal(plainText.getBytes(_encoding));
+        return encVal;
     }
-/*
-* TODO add the IV for decrypting
-*
-* */
-    public String decrypt(String cipherText) throws Exception{
+
+    public String decrypt(byte[] cipherText,byte[] IV) throws Exception{
         Cipher cipher = Cipher.getInstance(_algo);
-        SecretKeySpec key = new SecretKeySpec(_keyValue.getBytes("UTF-8"), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(_IV.getBytes("UTF-8")));
-        byte[] val = new BigInteger(cipherText,2).toByteArray();
-        return new String(cipher.doFinal(val),"UTF-8");
+        SecretKeySpec key = new SecretKeySpec(_keyValue.getBytes(_encoding), _secretKeyMode);
+        cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(IV));
+        return new String(cipher.doFinal(cipherText),_encoding);
+
     }
-    public byte[] getIV(){
-        return _IValea;
+
+
+    public String toBinary( byte[] bytes ){
+        StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
+        for( int i = 0; i < Byte.SIZE * bytes.length; i++ )
+            sb.append((bytes[i / Byte.SIZE] << i % Byte.SIZE & 0x80) == 0 ? '0' : '1');
+        return sb.toString();
+    }
+
+    public byte[] fromBinary( String s ){
+        int sLen = s.length();
+        byte[] toReturn = new byte[(sLen + Byte.SIZE - 1) / Byte.SIZE];
+        char c;
+        for( int i = 0; i < sLen; i++ )
+            if( (c = s.charAt(i)) == '1' )
+                toReturn[i / Byte.SIZE] = (byte) (toReturn[i / Byte.SIZE] | (0x80 >>> (i % Byte.SIZE)));
+            else if ( c != '0' )
+                throw new IllegalArgumentException();
+        return toReturn;
     }
 }
+

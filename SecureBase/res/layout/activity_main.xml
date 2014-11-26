@@ -85,5 +85,14 @@
             android:layout_above="@+id/buttonDelete"
             android:layout_alignLeft="@+id/textDelete"
             android:text="Delete by key" />
+    <Button
+            android:id="@+id/buttonClearBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buttonInfo"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Clear" />
+
 
 </RelativeLayout>
