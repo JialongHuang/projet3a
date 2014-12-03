@@ -2,6 +2,9 @@ package wl.SecureModule;
 
 import sun.security.provider.SHA;
 import sun.security.util.BigInt;
+import wl.SecureBase.Data;
+import wl.SecureBase.DataBase;
+import wl.SecureBase.DisplayInfo;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -17,18 +20,35 @@ public class Shamir {
     private BigInteger[] _coeff;
     private Random random = new Random();
     private BigInteger r;
+    private BigInteger _Masterkey;
 
     public Shamir(){
         t = 3;
-        m = new BigInteger("200000000");
+        _Masterkey = Data.key1.xor(DataBase.key2.xor(DisplayInfo.key3));
+        m = _Masterkey.add(BigInteger.ONE);
         _coeff = new BigInteger[t];
     }
+
     public Shamir(BigInteger secret){
         t = 3;
         m = secret.add(BigInteger.ONE);
         _coeff = new BigInteger[t];
     }
+    public void split(){
 
+        BigInteger somme = BigInteger.ZERO;
+
+        r = new BigInteger(127,random);
+        Data.secret1 = r.mod(m);
+        r = new BigInteger(127,random);
+        DataBase.secret2 = r.mod(m);
+
+        somme = somme.add(Data.secret1).mod(m);
+        somme = somme.add(DataBase.secret2).mod(m);
+
+        DisplayInfo.secret3 = _Masterkey.subtract(somme).mod(m);
+
+    }
     public void split(BigInteger Secret){
         int i;
         BigInteger somme = BigInteger.ZERO;

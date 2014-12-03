@@ -10,6 +10,16 @@ Creation de fichier:
     -fichier normal ou cache
     -nextInt chelou
 
+Shamir :
+    -trouver une solution pour le m de Zm la on utilise m=secret+1...
+
+Principe de génération de clé :
+    - 3 cle static
+    - genere Masterkey a partir de sa (avec xor) dans la class Shamir
+    - cree 3 secret a partir de MasterKey (Shamir)
+    - Combien 3 secret pour retrouver la masterkey et l'utilise dans Cipher
+    (idiot? puisqu'on peut retrouver la cle avec les 3 premier static)
+
 
 Creation Test:
     //File Creation

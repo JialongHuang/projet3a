@@ -59,6 +59,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         _db = new DataBase(this);
         _db.open();
 
+        Shamir shamir = new Shamir();
+        shamir.split();
+
         _cipher=new CipherAlgo();
         try {
             _prng = SecureRandom.getInstance("SHA1PRNG");
@@ -66,6 +69,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             e.printStackTrace();
         }
         _IV = new byte[16];
+
+
+
         testShamir();
     }
 

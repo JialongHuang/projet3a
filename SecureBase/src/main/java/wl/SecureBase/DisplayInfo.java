@@ -1,5 +1,6 @@
 package wl.SecureBase;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,10 @@ import android.widget.ListView;
  * Created by huang and slavnic on 29/10/14.
  */
 public class DisplayInfo extends Activity implements OnClickListener{
+    private static String string3 = "DISPLAYINFODISPL";
+    public static BigInteger key3 = new BigInteger(string3.getBytes());
+    public static BigInteger secret3;
+
     private Button _back;
     private DataBase _db;
     private ArrayList<Data> _listData;
